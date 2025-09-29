@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("Interfaz WiFi cargada correctamente");
+document.getElementById("wifi-form").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-  const form = document.querySelector("form");
-  form.addEventListener("submit", () => {
-    alert("Credenciales enviadas, reinicia el ESP32.");
-  });
+    let ssid = document.getElementById("ssid").value;
+    let password = document.getElementById("password").value;
+
+    document.getElementById("status").innerText = "enviando datos...";
+
 });
-
