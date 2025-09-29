@@ -1,1 +1,23 @@
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configura tu WiFi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Configuración WiFi</h2>
+    <p>Ingresa el SSID y la contraseña de tu red para conectar el ESP32.</p>
+    <form action="/save" method="GET">
+      <label for="ssid">SSID</label>
+      <input type="text" id="ssid" name="ssid" required>
+      <label for="pass">Contraseña</label>
+      <input type="password" id="pass" name="pass" required>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
