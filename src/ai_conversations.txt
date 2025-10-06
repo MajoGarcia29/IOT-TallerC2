@@ -48,3 +48,95 @@ Ponlo donde defines los endpoints y luego accede desde el navegador o crea un bo
 <form action="/reset" method="GET">
   <button type="submit">Resetear configuración</button>
 </form>
+
+
+
+ChatGPT said:
+
+Exacto ✅, sí hiciste algo equivalente a Postman, aunque de forma manual dentro del navegador.
+
+Te explico brevemente:
+
+💡 Qué es Postman
+
+Postman es una herramienta que sirve para enviar peticiones HTTP (GET, POST, etc.) a un servidor o dispositivo (como tu ESP32) y ver la respuesta fácilmente.
+Por ejemplo, puedes probar el endpoint /configure o /status sin tener que abrir una página web.
+
+💻 Lo que tú hiciste
+
+Tu página web del ESP32 ya tiene un pequeño cliente HTTP hecho con JavaScript (fetch).
+Ese fetch('/configure', {...}) hace lo mismo que haría Postman:
+
+Envía una petición POST al endpoint /configure
+
+
+Las credenciales deben guardarse en memoria no volátil (por ejemplo, EEPROM o SPIFFS). como pruebo la memoria
+ChatGPT said:
+
+Muy buena pregunta 👌 porque ese es un requisito clave: validar que las credenciales realmente se guardan en memoria no volátil (NVS/EEPROM/SPIFFS) y que no se borran aunque reinicies el ESP32.
+
+Con el código que cargaste, se están guardando en Preferences (NVS), que es la memoria flash interna del ESP32.
+
+🔹 Cómo probar que funciona
+
+Primera vez
+
+Arranca el ESP32 sin credenciales → entra en modo AP.
+
+Conéctate a ESP32-Setup → pon SSID y Password de tu red.
+
+El ESP debe conectarse y mostrar en el monitor serie:
+
+Conectado a MiWiFi
+IP: 192.168.x.x
+
+
+Apaga y enciende el ESP32
+
+Vuelve a abrir el monitor serie.
+
+Esta vez ya no debería entrar en modo AP, sino que se conectará automáticamente a tu WiFi usando las credenciales que guardó en la NVS.
+
+Verás directamente:
+
+Conectado a MiWiFi
+IP: 192.168.x.x
+
+
+Validación extra
+
+Llama al endpoint:
+
+GET http://<IP-ESP32>/status
+
+
+Te debe devolver un JSON con el SSID y la IP, confirmando que cargó las credenciales desde memoria.
+
+🔹 Cómo comprobar en código que se guardan
+
+En el setup() ya está esto:
+
+String ssid = prefs.getString("ssid", "");
+String pass = prefs.getString("password", "");
+
+
+👉 Si el ESP encuentra algo en NVS, no entra en AP y se conecta directo.
+👉 Si no hay nada, lanza el portal cautivo.
+
+🔹 Cómo probar el reset
+
+Haz un POST al endpoint:
+
+POST http://<IP-ESP32>/reset
+
+
+El ESP borrará las credenciales (prefs.clear();) y se reiniciará.
+
+Ahora, cuando lo vuelvas a encender → debe entrar otra vez en modo AP ESP32-Setup.
+
+✅ Con eso ya demuestras al profe que las credenciales se guardan en memoria no volátil y persisten después de reinicios.
+Con un body JSON ({ssid: "...", password: "..."})
+
+Y muestra la respuesta del servidor
+
+Así que sí 💯 — tu portal web cumple la misma función que Postman para ese caso.
