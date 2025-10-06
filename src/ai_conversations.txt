@@ -1,1 +1,50 @@
+💬 Usuario:
+¿Uso EEPROM o SPIFFS para guardar la configuración WiFi?
+🤖 ChatGPT:
+Cualquiera sirve, pero SPIFFS es más flexible para guardar archivos JSON (como credenciales WiFi).
 
+💬 Usuario:
+Te mostré parte del código donde arranca el servidor, ¿qué hace?
+🤖 ChatGPT:
+Inicia los endpoints normales si el ESP32 arranca conectado al WiFi (por ejemplo /status y /reset).
+
+💬 Usuario:
+Luego te pasé la función startConfigAP(), ¿qué hace?
+🤖 ChatGPT:
+Configura el ESP32 como punto de acceso (AP), inicia un servidor web y redirige cualquier solicitud al portal de configuración (modo captive portal).
+
+💬 Usuario:
+Te mostré el HTML del portal, ¿se puede mejorar?
+🤖 ChatGPT:
+Sí, se puede hacer más bonito y responsivo con un poco de CSS y mejor formato del formulario.
+
+💬 Usuario:
+¿Cómo borro todo como si el ESP32 no tuviera nada guardado?
+🤖 ChatGPT:
+Borra la memoria con SPIFFS.format() o EEPROM.begin() seguido de EEPROM.write()/EEPROM.commit() para limpiar los datos guardados.
+
+💬 Usuario:
+¿Y cómo lo hago desde el navegador, sin botón físico?
+🤖 ChatGPT:
+Cambia tu endpoint /reset para que acepte cualquier método con
+
+server.on("/reset", HTTP_ANY, handleReset);
+
+
+Así puedes escribir en el navegador:
+http://192.168.4.1/reset
+y se ejecutará el reinicio.
+
+💬 Usuario:
+¿Puedo hacer que se reinicie al escribir algo, como un “1”?
+🤖 ChatGPT:
+Sí, puedes hacerlo por URL o agregando un botón HTML que llame al endpoint /reset.
+
+💬 Usuario:
+¿Dónde lo agrego y cómo se usa?
+🤖 ChatGPT:
+Ponlo donde defines los endpoints y luego accede desde el navegador o crea un botón HTML con:
+
+<form action="/reset" method="GET">
+  <button type="submit">Resetear configuración</button>
+</form>
